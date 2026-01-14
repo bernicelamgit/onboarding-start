@@ -40,7 +40,7 @@ module tt_um_uwasic_onboarding_bernice_lam (
   wire [7:0] en_reg_out_15_8  = 8'hff;
   wire [7:0] en_reg_pwm_7_0   = 8'hff;
   wire [7:0] en_reg_pwm_15_8  = 8'hff;
-
+  wire [15:0] internal_pwm_out;
   pwm_peripheral pwm_peripheral_inst (
     .clk(clk),
     .rst_n(rst_n),
@@ -49,9 +49,10 @@ module tt_um_uwasic_onboarding_bernice_lam (
     .en_reg_pwm_7_0(en_reg_pwm_7_0),
     .en_reg_pwm_15_8(en_reg_pwm_15_8),
     .pwm_duty_cycle(spi_received_val),
-    .out({uio_out, uo_out})
+    .out(internal_pwm_out)
   );
-
+  assign uo_out  = (en_reg_pwm_7_0 == 8'h00) ? pwm_val : internal_pwm_out[7:0];
+  assign uio_out = (en_reg_pwm_7_0 == 8'h00) ? pwm_val : internal_pwm_out[15:8];
  
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, ui_in[7:3], spi_received_val, uio_in, 1'b0};
