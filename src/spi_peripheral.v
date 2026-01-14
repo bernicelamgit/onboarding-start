@@ -39,7 +39,7 @@ module spi_peripheral (
         end else  if(sclk_rising_edge) begin
                 bit_counter <= bit_counter + 1'b1;
                 shift_reg <= {shift_reg[14:0], copi_sync[1]};
-            end
+            
 
             
         end
