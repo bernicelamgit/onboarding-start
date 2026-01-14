@@ -10,13 +10,13 @@ module spi_peripheral (
 );
     reg [2:0] sclk_sync;
     reg [2:0] ncs_sync;
-    reg [1:0] copi_sync;
+    reg [2:0] copi_sync;
 
     always @(posedge clk or negedge rst_n) begin 
         if (!rst_n) begin
             sclk_sync <= 3'b000;
-            ncs_sync <= 3'b11;
-            copi_sync <= 2'b00;
+            ncs_sync <= 3'b111;
+            copi_sync <= 3'b000;
         end else begin
             sclk_sync <= {sclk_sync[1:0], sclk };
             ncs_sync <= {ncs_sync[1:0], ncs };
@@ -27,7 +27,7 @@ module spi_peripheral (
     wire sclk_rising_edge = sclk_sync[2]==0 && sclk_sync[1]==1;
     wire sclk_falling_edge = sclk_sync[2]==1 && sclk_sync[1]==0;
     reg [15:0] shift_reg;
-    reg [3:0] bit_counter;
+    reg [4:0] bit_counter;
 
     always @(negedge rst_n or posedge clk) begin
         if (!rst_n) begin
