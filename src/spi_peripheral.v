@@ -6,7 +6,7 @@ module spi_peripheral (
     input wire sclk, 
     input wire ncs,
     input wire copi, 
-    output reg [7:0] pwm_val
+    output reg [7:0] pwm_duty_cycle
 );
     reg [2:0] sclk_sync;
     reg [2:0] ncs_sync;
@@ -50,9 +50,9 @@ module spi_peripheral (
     wire transaction_ready = ncs_rising_edge && bit_counter == 5'd16 && shift_reg[14:8]<=MAX_ADDRESS;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            pwm_val <= 8'b0;
+            pwm_duty_cycle <= 8'b0;
         end else if (transaction_ready) begin
-            pwm_val <= shift_reg [7:0];
+            pwm_duty_cycle <= shift_reg [7:0];
             
         end
     end

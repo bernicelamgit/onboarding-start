@@ -16,15 +16,20 @@ module tt_um_uwasic_onboarding_bernice_lam (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  wire [7:0] spi_received_val;
+
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = spi_received_val;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
+  //assign uo_out  = spi_received_val;  // Example: ou_out is the sum of ui_in and uio_in
+  //assign uio_out = 0;
   assign uio_oe  = 8'hFF;
 
+  wire [7:0] en_reg_out_7_0   ;
+  wire [7:0] en_reg_out_15_8  ;
+  wire [7:0] en_reg_pwm_7_0   ;
+  wire [7:0] en_reg_pwm_15_8  ;
+  wire [7:0] pwm_duty_cycle;
 
-  //wire [7:0] pwm_duty_cycle;
+
 
  
 
@@ -32,15 +37,16 @@ module tt_um_uwasic_onboarding_bernice_lam (
     .clk(clk),
     .rst_n(rst_n),
     .sclk(ui_in[0]),
-    .ncs(ui_in[1]),
-    .copi(ui_in[2]),
-    .pwm_val(spi_received_val)
+    .ncs(ui_in[2]),
+    .copi(ui_in[1]),
+
+    .en_reg_out_7_0(en_reg_out_7_0),
+    .en_reg_out_15_8(en_reg_out_15_8),
+    .en_reg_pwm_7_0(en_reg_pwm_7_0),
+    .en_reg_pwm_15_8(en_reg_pwm_15_8),
+    .pwm_duty_cycle(pwm_duty_cycle)
   ); 
-/* 
-  wire [7:0] en_reg_out_7_0   = 8'h00;
-  wire [7:0] en_reg_out_15_8  = 8'h00;
-  wire [7:0] en_reg_pwm_7_0   = 8'h00;
-  wire [7:0] en_reg_pwm_15_8  = 8'h00;
+
 
 
  pwm_peripheral pwm_peripheral_inst (
@@ -50,10 +56,10 @@ module tt_um_uwasic_onboarding_bernice_lam (
     .en_reg_out_15_8(en_reg_out_15_8),
     .en_reg_pwm_7_0(en_reg_pwm_7_0),
     .en_reg_pwm_15_8(en_reg_pwm_15_8),
-    .pwm_duty_cycle(spi_received_val),
-    .out(internal_pwm_out)
+    .pwm_duty_cycle(pwm_duty_cycle),
+    .out({uio_out, uo_out})
   );
-  */
+
 
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, ui_in[7:3], uio_in, 1'b0};
