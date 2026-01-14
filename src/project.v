@@ -36,10 +36,10 @@ module tt_um_uwasic_onboarding_bernice_lam (
     .pwm_val(spi_received_val)
   ); 
 
-  wire [7:0] en_reg_out_7_0   = 8'b0;
-  wire [7:0] en_reg_out_15_8  = 8'b0;
-  wire [7:0] en_reg_pwm_7_0   = 8'b0;
-  wire [7:0] en_reg_pwm_15_8  = 8'b0;
+  wire [7:0] en_reg_out_7_0   = 8'hff;
+  wire [7:0] en_reg_out_15_8  = 8'hff;
+  wire [7:0] en_reg_pwm_7_0   = 8'hff;
+  wire [7:0] en_reg_pwm_15_8  = 8'hff;
 
   pwm_peripheral pwm_peripheral_inst (
     .clk(clk),
