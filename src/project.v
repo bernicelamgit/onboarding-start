@@ -21,25 +21,11 @@ module tt_um_uwasic_onboarding_bernice_lam (
   //assign uio_out = 0;
   assign uio_oe  = 8'hFF;
 
-  wire [7:0] en_reg_out_7_0;
-  wire [7:0] en_reg_out_15_8;
-  wire [7:0] en_reg_pwm_7_0;
-  wire [7:0] en_reg_pwm_15_8;
-  wire [7:0] pwm_duty_cycle;
 
-  pwm_peripheral pwm_peripheral_inst (
-    .clk(clk),
-    .rst_n(rst_n),
-    .en_reg_out_7_0(en_reg_out_7_0),
-    .en_reg_out_15_8(en_reg_out_15_8),
-    .en_reg_pwm_7_0(en_reg_pwm_7_0),
-    .en_reg_pwm_15_8(en_reg_pwm_15_8),
-    .pwm_duty_cycle(pwm_duty_cycle),
-    .out({uio_out, uo_out})
-  );
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, ui_in[7:3], uio_in, 1'b0};
+  //wire [7:0] pwm_duty_cycle;
   wire [7:0] spi_received_val;
+
+ 
 
   spi_peripheral my_spi (
     .clk(clk),
@@ -49,6 +35,27 @@ module tt_um_uwasic_onboarding_bernice_lam (
     .copi(ui_in[2]),
     .pwm_val(spi_received_val)
   ); 
+
+  wire [7:0] en_reg_out_7_0   = 8'b0;
+  wire [7:0] en_reg_out_15_8  = 8'b0;
+  wire [7:0] en_reg_pwm_7_0   = 8'b0;
+  wire [7:0] en_reg_pwm_15_8  = 8'b0;
+
+  pwm_peripheral pwm_peripheral_inst (
+    .clk(clk),
+    .rst_n(rst_n),
+    .en_reg_out_7_0(en_reg_out_7_0),
+    .en_reg_out_15_8(en_reg_out_15_8),
+    .en_reg_pwm_7_0(en_reg_pwm_7_0),
+    .en_reg_pwm_15_8(en_reg_pwm_15_8),
+    .pwm_duty_cycle(spi_received_val),
+    .out({uio_out, uo_out})
+  );
+  // List all unused inputs to prevent warnings
+  wire _unused = &{ena, ui_in[7:3], uio_in, 1'b0};
+  
+
+  
 
 
 

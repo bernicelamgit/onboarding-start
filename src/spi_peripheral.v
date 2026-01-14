@@ -20,7 +20,7 @@ module spi_peripheral (
         end else begin
             sclk_sync <= {sclk_sync[1:0], sclk };
             ncs_sync <= {ncs_sync[1:0], ncs };
-            copi_sync <= {copi_sync[0], copi };
+            copi_sync <= {copi_sync[1:0], copi };
         end
     end
 
