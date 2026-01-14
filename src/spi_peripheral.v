@@ -1,0 +1,72 @@
+`default_nettype none
+
+module spi_peripheral (
+    input wire clk,
+    input wire rst_n,
+    input wire sclk, 
+    input wire ncs,
+    input wire copi, 
+    output reg [7:0] pwm_val
+);
+    reg [2:0] sclk_sync;
+    reg [2:0] ncs_sync;
+    reg [1:0] copi_sync;
+
+    always @(posedge clk or negedge rst_n) begin 
+        if (!rst_n) begin
+            sclk_sync <= 3'b000;
+            ncs_sync <= 3'b11;
+            copi_sync <= 2'b00;
+        end else begin
+            sclk_sync <= {sclk_sync[1:0], sclk };
+            ncs_sync <= {ncs_sync[1:0], ncs };
+            copi_sync <= {copi_sync[0], copi };
+        end
+    end
+
+    wire sclk_rising_edge = sclk_sync[2]==0 && sclk_sync[1]==1;
+    wire sclk_falling_edge = sclk_sync[2]==1 && sclk_sync[1]==0;
+    reg [15:0] shift_reg;
+    reg [3:0] bit_counter;
+
+    always @(negedge rst_n or posedge clk) begin
+        if (!rst_n) begin
+            bit_counter <=0;
+            shift_reg<=0;
+        end else if (ncs_sync[1]) begin
+            bit_counter <= 0;
+            shift_reg <= 0;
+        end else begin
+            if(sclk_rising_edge && !ncs_sync[1]) begin
+                bit_counter <= bit_counter + 1;
+                shift_reg <= {shift_reg[14:0], copi_sync[1]};
+            end
+
+            
+        end
+    end
+
+    localparam MAX_ADDRESS = 7'h04;
+    wire ncs_rising_edge = (ncs_sync[2]== 0 && ncs_sync[1]==1);
+    wire transaction_ready = ncs_rising_edge && bit_counter == 16 && shift_reg[14:8]<=MAX_ADDRESS;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            pwm_val <= 8'b0;
+        end else if (transaction_ready) begin
+            pwm_val <= shift_reg [7:0];
+            
+        end
+    end
+
+
+
+
+
+
+
+
+
+        
+
+
+endmodule
