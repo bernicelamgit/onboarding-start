@@ -27,6 +27,9 @@ module tb ();
   wire VGND = 1'b0;
 `endif
 
+  wire uo_out_bit_0;
+  assign uo_out_bit_0 = uo_out[0];
+
   // Replace tt_um_example with your module name:
   tt_um_uwasic_onboarding_bernice_lam user_project (
 

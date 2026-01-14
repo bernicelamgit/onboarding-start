@@ -175,10 +175,10 @@ async def test_pwm_freq(dut):
 
     await ClockCycles(dut.clk, 1000)
 
-    await RisingEdge(dut.uo_out[0])
+    await RisingEdge(dut.uo_out_bit_0)
     t1 = cocotb.utils.get_sim_time(units = "ns")
 
-    await RisingEdge(dut.uo_out[0])
+    await RisingEdge(dut.uo_out_bit_0)
     t2 = cocotb.utils.get_sim_time(units = "ns")
 
     period_ns = t2-t1;
@@ -210,7 +210,7 @@ async def test_pwm_duty(dut):
     dut._log.info("Testing Duty Cycle: 0%")
     await send_spi_transaction(dut, 1, 0x04, 0x00)
     for i in range (5000):
-        assert dut.uo_out[0].value == 0, "Error: Should always be low for 0%"
+        assert dut.uo_out_bit_0.value == 0, "Error: Should always be low for 0%"
         await ClockCycles(dut.clk, 1)
     
     
@@ -221,7 +221,7 @@ async def test_pwm_duty(dut):
     dut._log.info("Testing Duty Cycle: 100%")
     await send_spi_transaction(dut, 1, 0x04, 0xFF)
     for i in range (5000):
-        assert dut.uo_out[0].value == 1, "Error: Should always be high for 100%"
+        assert dut.uo_out_bit_0.value == 1, "Error: Should always be high for 100%"
         await ClockCycles(dut.clk, 1)
     
     dut._log.info("100% Duty Cycle success")
@@ -231,11 +231,11 @@ async def test_pwm_duty(dut):
     await send_spi_transaction(dut, 1, 0x04, 0x80)
     await ClockCycles(dut.clk, 1000)
 
-    await RisingEdge(dut.uo_out[0])
+    await RisingEdge(dut.uo_out_bit_0)
     t1 = cocotb.utils.get_sim_time(units = "ns")
-    await FallingEdge(dut.uo_out[0])
+    await FallingEdge(dut.uo_out_bit_0)
     t2 = cocotb.utils.get_sim_time(units = "ns")
-    await RisingEdge(dut.uo_out[0])
+    await RisingEdge(dut.uo_out_bit_0)
     t3 = cocotb.utils.get_sim_time(units = "ns")
 
     high_time = t2-t1
