@@ -25,20 +25,19 @@ module spi_peripheral (
     end
 
     wire sclk_rising_edge = sclk_sync[2]==0 && sclk_sync[1]==1;
-    wire sclk_falling_edge = sclk_sync[2]==1 && sclk_sync[1]==0;
+    
     reg [15:0] shift_reg;
     reg [4:0] bit_counter;
 
-    always @(negedge rst_n or posedge clk) begin
+    always @( posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            bit_counter <=0;
-            shift_reg<=0;
+            bit_counter <=5'd0;
+            shift_reg<=16'd0;
         end else if (ncs_sync[1]) begin
-            bit_counter <= 0;
-            shift_reg <= 0;
-        end else begin
-            if(sclk_rising_edge && !ncs_sync[1]) begin
-                bit_counter <= bit_counter + 1;
+            bit_counter <= 5'd0;
+            shift_reg <= 16'd0;
+        end else  if(sclk_rising_edge) begin
+                bit_counter <= bit_counter + 1'b1;
                 shift_reg <= {shift_reg[14:0], copi_sync[1]};
             end
 
@@ -48,7 +47,7 @@ module spi_peripheral (
 
     localparam MAX_ADDRESS = 7'h04;
     wire ncs_rising_edge = (ncs_sync[2]== 0 && ncs_sync[1]==1);
-    wire transaction_ready = ncs_rising_edge && bit_counter == 16 && shift_reg[14:8]<=MAX_ADDRESS;
+    wire transaction_ready = ncs_rising_edge && bit_counter == 5'd16 && shift_reg[14:8]<=MAX_ADDRESS;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pwm_val <= 8'b0;
