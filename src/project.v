@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_example_onboarding_bernice_lam (
+module tt_um_uwasic_onboarding_bernice_lam (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
