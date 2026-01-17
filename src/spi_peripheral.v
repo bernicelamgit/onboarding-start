@@ -51,9 +51,9 @@ module spi_peripheral (
         end
     end
 
-    localparam MAX_ADDRESS = 7'h04;
+
     
-    wire transaction_ready = ncs_rising_edge && bit_counter == 5'd16 && shift_reg[15] == 1'b1;
+    wire transaction_ready = ncs_rising_edge && bit_counter == 5'd16 && shift_reg[15] == 1'b1 ;
     
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
